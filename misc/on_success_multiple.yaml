@@ -1,0 +1,78 @@
+resources:
+- name: resource-repository
+  type: git
+  source:
+    uri: git@github.com:Fufuhu/concourse_sample.git
+    branch: master
+    private_key: ((ssh-key))
+
+jobs:
+  - name: job-sample
+    plan:
+      - get: resource-repository
+      - task: task-sample
+        on_success:
+          do:
+            - task: task-success-a
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    repository: alpine
+                    tag: 3.7
+                run: 
+                  path: /bin/sh
+                  args:
+                    - -c
+                    - -x
+                    - |
+                      echo "success-a"
+            - task: task-success-b
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    repository: alpine
+                    tag: 3.7
+                run: 
+                  path: /bin/sh
+                  args:
+                    - -c
+                    - -x
+                    - |
+                      echo "success-b"
+            - task: task-success-c
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    repository: alpine
+                    tag: 3.7
+                run: 
+                  path: /bin/sh
+                  args:
+                    - -c
+                    - -x
+                    - |
+                      echo "success-c"
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+              tag: 3.7
+          inputs:
+            - name: resource-repository
+          run: 
+            path: /bin/sh
+            args:
+              - -c
+              - -x
+              - |
+                uname -a
+                ls -lah
+                ls -lah resource-repository
